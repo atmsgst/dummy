@@ -562,8 +562,140 @@ tbody td:first-child{padding-left:14px}
 tbody tr{animation:faderow .18s ease both}
 
 /* ═══════════════════════════════════════════════
-   LOGIN SCREEN
+   VIEW TABS (Dept Audit topbar)
 ═══════════════════════════════════════════════ */
+.vt-btn{padding:5px 12px;border-radius:5px;font-size:11px;font-weight:600;border:none;cursor:pointer;background:transparent;color:var(--ink4);transition:all .15s;font-family:inherit}
+.vt-btn.active{background:var(--accent);color:#fff}
+
+/* ═══════════════════════════════════════════════
+   DEPT AUDIT PANEL
+═══════════════════════════════════════════════ */
+#deptaudit-panel{
+  position:fixed;
+  top:var(--top-h);
+  left:var(--sb-w);
+  right:0;
+  bottom:0;
+  display:none;
+  flex-direction:column;
+  background:var(--white);
+  z-index:50;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+#deptaudit-panel.active{display:flex}
+
+/* Audit sync bar */
+#da-sync-bar{display:flex;align-items:center;gap:8px;padding:6px 24px;background:var(--navy);color:rgba(255,255,255,.65);font-size:10px;font-weight:600;flex-shrink:0}
+#da-sync-dot{width:7px;height:7px;border-radius:50%;background:#64748b;flex-shrink:0}
+#da-sync-dot.ok{background:#34d399;box-shadow:0 0 5px #34d399;animation:sdpulse 2s infinite}
+#da-sync-dot.busy{background:#fbbf24;animation:sdpulse .5s infinite}
+#da-sync-dot.err{background:#f87171}
+
+/* Audit stat cards */
+#da-dash-panel{background:#fff;border-bottom:1.5px solid var(--border);padding:12px 24px;flex-shrink:0}
+.da-stat-cards{display:flex;gap:8px;overflow-x:auto}
+.da-stat-card{flex:1;min-width:90px;border:1.5px solid var(--border);border-radius:9px;padding:9px 12px;position:relative;overflow:hidden;background:#fff;cursor:default}
+.da-stat-card-bar{height:3px;border-radius:9px 9px 0 0;position:absolute;top:0;left:0;right:0}
+
+/* Audit toolbar */
+#da-toolbar{background:#fff;border-bottom:1.5px solid var(--border);padding:8px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
+
+/* Audit content */
+#da-content{flex:1;overflow:auto;padding:0;min-height:0}
+#da-view-matrix{padding:16px 24px}
+#da-view-detail{padding:16px 24px;display:flex;flex-direction:column;gap:12px}
+#da-view-grid{padding:16px 24px}
+#da-view-docs{padding:16px 24px}
+
+/* Audit matrix table */
+.da-matrix-wrap{overflow:auto;border-radius:9px;box-shadow:var(--s1);border:1.5px solid var(--border)}
+.da-matrix-table{border-collapse:separate;border-spacing:0;width:100%;background:#fff;min-width:600px}
+.da-matrix-table th{padding:10px 14px;font-size:11px;font-weight:800;color:#1e3a5f;letter-spacing:.5px;text-transform:uppercase;background:#dde4ef;border-bottom:2px solid var(--border2);position:sticky;top:0;z-index:5;white-space:nowrap}
+.da-matrix-table th:first-child{position:sticky;left:0;z-index:10;background:var(--bg2)}
+.da-matrix-table td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:11px;vertical-align:middle}
+.da-matrix-table td:first-child{font-weight:600;color:var(--ink2);position:sticky;left:0;background:#fff;z-index:2;white-space:nowrap}
+.da-matrix-table tr:hover td{background:var(--accent-lt)}
+.da-matrix-table tr:hover td:first-child{background:var(--accent-lt)}
+.da-prog-cell{text-align:center;min-width:80px}
+.da-prog-bar-wrap{background:var(--border);border-radius:20px;height:7px;width:64px;margin:auto}
+.da-prog-bar-fill{height:7px;border-radius:20px;transition:width .3s;min-width:2px}
+.da-prog-pct{font-size:11px;font-weight:700;color:var(--ink2);margin-top:4px}
+
+/* Audit detail cards */
+.da-detail-card{background:#fff;border:1.5px solid var(--border);border-radius:9px;overflow:hidden;box-shadow:var(--s1)}
+.da-dcc-header{padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1.5px solid var(--border);cursor:pointer;background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%)}
+.da-dcc-header:hover{background:linear-gradient(135deg,var(--navy2) 0%,#2d5a9e 100%)}
+.da-dcc-name{font-size:13px;font-weight:700;color:#fff}
+.da-dcc-gstin{font-size:10px;color:rgba(255,255,255,.6);font-family:monospace}
+.da-dcc-chev{margin-left:auto;font-size:11px;color:rgba(255,255,255,.6);transition:transform .2s}
+.da-dcc-chev.open{transform:rotate(90deg)}
+.da-dcc-body{display:none}
+.da-dcc-body.open{display:block}
+.da-yr-tabs{display:flex;gap:4px;padding:10px 14px;border-bottom:1px solid var(--border);background:#fff;overflow-x:auto}
+.da-yr-tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid var(--border);cursor:pointer;color:var(--ink4);background:#fff;transition:all .15s;white-space:nowrap}
+.da-yr-tab.active{border-color:var(--accent);background:var(--accent-lt);color:var(--accent2)}
+.da-cat-group{border-bottom:1px solid var(--border)}
+.da-cat-group:last-child{border-bottom:none}
+.da-cat-hdr{padding:8px 16px;display:flex;align-items:center;gap:8px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--ink3);background:var(--bg2);cursor:pointer}
+.da-cat-hdr:hover{background:var(--accent-lt)}
+.da-cat-prog-mini{margin-left:auto;font-size:9px;color:var(--ink4)}
+.da-doc-rows{padding:0}
+.da-doc-row{display:flex;align-items:center;gap:10px;padding:8px 16px 8px 24px;border-bottom:1px solid var(--border);transition:background .1s}
+.da-doc-row:last-child{border-bottom:none}
+.da-doc-row:hover{background:var(--accent-lt)}
+.da-doc-name{flex:1;font-size:11px;color:var(--ink2)}
+.da-doc-resp{font-size:9px;color:var(--ink5);width:40px;text-align:center;flex-shrink:0}
+.da-remarks-btn{background:none;border:none;cursor:pointer;font-size:12px;color:var(--ink5);padding:2px 4px;border-radius:4px;transition:all .15s}
+.da-remarks-btn:hover{background:var(--accent-lt);color:var(--accent)}
+
+/* Audit SDD pill */
+.da-sdd-wrap{position:relative;flex-shrink:0}
+.da-sdd-pill{display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;white-space:nowrap}
+.da-sdd-pill:hover{box-shadow:var(--s1)}
+.da-sdd-arr{font-size:8px;opacity:.6}
+.da-sdd-list{position:fixed;background:#fff;border:1.5px solid var(--border);border-radius:9px;box-shadow:var(--s3);z-index:9999;min-width:160px;padding:4px}
+.da-sdd-list.hidden{display:none}
+.da-sdd-opt{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:11px;transition:background .1s}
+.da-sdd-opt:hover{background:var(--accent-lt)}
+.da-sdd-opt.scur{background:var(--accent-lt);font-weight:600}
+.da-sdd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* Audit status classes */
+.da-s-pending{background:#f8fafc;color:#64748b;border-color:#e2e8f0}
+.da-s-received{background:#fffbeb;color:#92400e;border-color:#fde68a}
+.da-s-working{background:#f5f3ff;color:#5b21b6;border-color:#ddd6fe}
+.da-s-review{background:#eff6ff;color:#1e40af;border-color:#bfdbfe}
+.da-s-approved{background:#ecfeff;color:#0e7490;border-color:#a5f3fc}
+.da-s-done{background:#f0fdf4;color:#15803d;border-color:#bbf7d0}
+.da-s-na{background:#fafafa;color:#9ca3af;border-color:#e5e7eb}
+
+/* Audit grid */
+.da-client-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.da-cg-card{background:#fff;border:1.5px solid var(--border);border-radius:9px;overflow:hidden;box-shadow:var(--s1);transition:all .15s;cursor:pointer}
+.da-cg-card:hover{transform:translateY(-2px);box-shadow:var(--s2);border-color:var(--accent)}
+.da-cg-top{padding:14px 16px;border-bottom:1px solid var(--border)}
+.da-cg-name{font-size:13px;font-weight:700;color:var(--ink)}
+.da-cg-gstin{font-size:10px;color:var(--ink5);font-family:monospace;margin-top:2px}
+.da-cg-years{padding:10px 14px;display:flex;flex-wrap:wrap;gap:6px}
+.da-cg-yr{font-size:10px;padding:3px 8px;border-radius:6px;border:1.5px solid var(--border);color:var(--ink4);cursor:pointer}
+.da-cg-yr-bar{background:var(--green);height:3px;border-radius:3px;margin-top:4px;transition:width .3s}
+.da-cg-yr-pct{font-size:9px;color:var(--ink5)}
+.da-cg-actions{padding:8px 14px;border-top:1px solid var(--border);display:flex;gap:6px}
+.da-cg-btn{flex:1;padding:6px;border-radius:6px;font-size:10px;font-weight:600;border:1.5px solid var(--border);cursor:pointer;text-align:center;transition:all .15s;background:#fff;color:var(--ink3)}
+.da-cg-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-lt)}
+.da-cg-btn.del:hover{border-color:var(--red);color:var(--red);background:var(--red-lt)}
+
+/* Audit docs table */
+.da-docs-table-wrap{border-radius:9px;box-shadow:var(--s1);border:1.5px solid var(--border);overflow:auto}
+.da-docs-table{width:100%;border-collapse:separate;border-spacing:0;background:#fff}
+.da-docs-table th{padding:10px 12px;font-size:9px;font-weight:700;color:var(--ink4);letter-spacing:.8px;text-transform:uppercase;background:var(--bg2);border-bottom:1.5px solid var(--border);white-space:nowrap}
+.da-docs-table td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:12px}
+.da-docs-table tr:hover td{background:var(--accent-lt)}
+
+/* Audit modals use same .overlay/.modal classes, just new IDs */
+
+
 #login-screen{
   position:fixed;inset:0;z-index:9999;
   background:linear-gradient(135deg,#0f1d35 0%,#1e3a5f 50%,#152b4e 100%);
@@ -975,6 +1107,10 @@ tbody tr{animation:faderow .18s ease both}
       <span class="sb-icon">🌐</span><span>All Clients</span>
       <span class="sb-badge" id="nb-allclients" style="display:none">0</span>
     </div>
+    <div class="sb-item" id="nav-deptaudit" onclick="setView('deptaudit')">
+      <span class="sb-icon">🏛️</span><span>Dept Audit</span>
+      <span class="sb-badge" id="nb-deptaudit" style="display:none">0</span>
+    </div>
 
     <div class="sb-section-lbl" id="months-lbl">Monthly Returns</div>
     <div id="sbMonths">
@@ -1039,6 +1175,16 @@ tbody tr{animation:faderow .18s ease both}
     <div style="display:none;align-items:center;gap:8px;margin-left:auto" id="allclients-actions">
       <button class="tb-btn tb-secondary" onclick="exportAllClientsCSV()">⬇ Export All</button>
       <button class="tb-btn tb-navy" onclick="refreshAllClients()">🔄 Refresh All Teams</button>
+    </div>
+    <div style="display:none;align-items:center;gap:8px;margin-left:auto" id="deptaudit-actions">
+      <div class="view-tabs" style="display:flex;gap:2px;background:var(--bg2);border:1.5px solid var(--border);border-radius:7px;padding:2px">
+        <button class="vt-btn active" id="da-vt-matrix" onclick="daSetView('matrix',this)">Matrix</button>
+        <button class="vt-btn" id="da-vt-detail" onclick="daSetView('detail',this)">Detail</button>
+        <button class="vt-btn" id="da-vt-grid" onclick="daSetView('grid',this)">Cards</button>
+        <button class="vt-btn" id="da-vt-docs" onclick="daSetView('docs',this)">Docs</button>
+      </div>
+      <button class="tb-btn tb-secondary" onclick="daSyncNow()">🔄 Sync</button>
+      <button class="tb-btn tb-primary" onclick="daOpenM('m-da-add-client')">+ Client</button>
     </div>
   </div>
 
@@ -1478,7 +1624,178 @@ tbody tr{animation:faderow .18s ease both}
 
 </div>
 
-<div class="toast" id="toast"><span id="toast-msg"></span></div>
+<!-- ════════════════════ DEPT AUDIT PANEL ════════════════════ -->
+<div id="deptaudit-panel">
+
+  <!-- Sync bar -->
+  <div id="da-sync-bar">
+    <div id="da-sync-dot"></div>
+    <span id="da-sync-status-text">Not synced</span>
+    <span style="margin-left:auto;font-size:9px;color:rgba(255,255,255,.3)" id="da-sync-time-text"></span>
+  </div>
+
+  <!-- Dash Panel -->
+  <div id="da-dash-panel">
+    <div class="dash-header">
+      <div class="dash-title" style="font-size:12px;font-weight:700;color:var(--ink2);display:flex;align-items:center;gap:7px">
+        <span style="display:inline-block;width:3px;height:12px;background:var(--accent);border-radius:2px"></span>
+        Audit Summary
+      </div>
+      <div style="margin-left:auto;display:flex;gap:6px">
+        <button class="tb-btn tb-secondary" style="font-size:10px;padding:5px 10px" onclick="daOpenM('m-da-add-year')">+ Year</button>
+        <button class="tb-btn tb-secondary" style="font-size:10px;padding:5px 10px" onclick="daOpenM('m-da-add-doc')">+ Doc</button>
+      </div>
+    </div>
+    <div class="da-stat-cards">
+      <div class="da-stat-card"><div class="da-stat-card-bar" style="background:var(--accent)"></div><div class="stat-num" style="color:var(--accent)" id="da-sc-clients">–</div><div class="stat-lbl">Clients</div></div>
+      <div class="da-stat-card"><div class="da-stat-card-bar" style="background:var(--purple)"></div><div class="stat-num" style="color:var(--purple)" id="da-sc-years">–</div><div class="stat-lbl">Years Tracked</div></div>
+      <div class="da-stat-card"><div class="da-stat-card-bar" style="background:var(--teal)"></div><div class="stat-num" style="color:var(--teal)" id="da-sc-docs">–</div><div class="stat-lbl">Document Types</div></div>
+      <div class="da-stat-card"><div class="da-stat-card-bar" style="background:var(--green)"></div><div class="stat-num" style="color:var(--green)" id="da-sc-done">–</div><div class="stat-lbl">Done Items</div></div>
+      <div class="da-stat-card"><div class="da-stat-card-bar" style="background:var(--orange)"></div><div class="stat-num" style="color:var(--orange)" id="da-sc-pending">–</div><div class="stat-lbl">Pending</div></div>
+      <div class="da-stat-card"><div class="da-stat-card-bar" style="background:var(--red)"></div><div class="stat-num" style="color:var(--red)" id="da-sc-overall">–</div><div class="stat-lbl">Overall %</div></div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div id="da-toolbar">
+    <div class="search-box"><input type="text" id="da-search-inp" placeholder="Search clients, documents…" oninput="daApplyFilters()"></div>
+    <select class="fsel" id="da-flt-client" onchange="daApplyFilters()"><option value="">All Clients</option></select>
+    <select class="fsel" id="da-flt-year" onchange="daApplyFilters()"><option value="">All Years</option></select>
+    <select class="fsel" id="da-flt-cat" onchange="daApplyFilters()">
+      <option value="">All Categories</option>
+      <option>Financials</option><option>General</option><option>GST</option>
+      <option>Income Tax</option><option>Legal &amp; Contracts</option>
+      <option>Sales &amp; Operations</option><option>FEES</option><option>Review</option>
+    </select>
+    <select class="fsel" id="da-flt-status" onchange="daApplyFilters()">
+      <option value="">All Statuses</option>
+      <option value="Pending">Pending</option><option value="Received">Received</option>
+      <option value="Working">Working</option><option value="Review">Under Review</option>
+      <option value="Approved">Approved</option><option value="Done">Done</option><option value="N/A">N/A</option>
+    </select>
+  </div>
+
+  <!-- Content Views -->
+  <div id="da-content">
+    <div id="da-view-matrix"></div>
+    <div id="da-view-detail" class="hidden"></div>
+    <div id="da-view-grid" class="hidden"></div>
+    <div id="da-view-docs" class="hidden"></div>
+  </div>
+
+</div>
+
+<!-- ── DEPT AUDIT MODALS ─────────────────────────────── -->
+
+<!-- Modal: Add/Edit Client -->
+<div class="overlay" data-da-modal="1" id="m-da-add-client">
+  <div class="modal msm">
+    <div class="mhdr">
+      <div class="mhdr-l"><div class="micon micon-blue">👤</div>
+        <div><div class="mtitle" id="m-da-client-title">Add New Client</div><div class="msub">Dept Audit client</div></div></div>
+      <button class="mclose" onclick="daCloseM('m-da-add-client')">✕</button>
+    </div>
+    <div class="mbody">
+      <input type="hidden" id="da-edit-client-id">
+      <div class="fg"><label class="fl">Client Name *</label><input class="fi" id="da-inp-client-name" placeholder="e.g. Serenity Impex"></div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">GSTIN *</label><input class="fi" id="da-inp-client-gstin" placeholder="27XXXXX0000X1ZX" style="font-family:monospace"></div>
+        <div class="fg"><label class="fl">Category</label>
+          <select class="fs" id="da-inp-client-cat">
+            <option value="A">A – Priority</option><option value="B">B – Standard</option>
+            <option value="C">C – Regular</option><option value="D">D – Low</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="mfooter">
+      <button class="tb-btn tb-secondary" onclick="daCloseM('m-da-add-client')">Cancel</button>
+      <button class="tb-btn tb-primary" onclick="daSaveClient()">Save Client</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add Year -->
+<div class="overlay" data-da-modal="1" id="m-da-add-year">
+  <div class="modal msm">
+    <div class="mhdr">
+      <div class="mhdr-l"><div class="micon micon-blue">📅</div>
+        <div><div class="mtitle">Add Financial Year</div><div class="msub">Track a new audit year</div></div></div>
+      <button class="mclose" onclick="daCloseM('m-da-add-year')">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="fg"><label class="fl">Year Label *</label><input class="fi" id="da-inp-year-label" placeholder="e.g. 24-25"></div>
+      <div style="font-size:11px;color:var(--ink4)">Format: YY-YY (e.g. 19-20, 24-25)</div>
+    </div>
+    <div class="mfooter">
+      <button class="tb-btn tb-secondary" onclick="daCloseM('m-da-add-year')">Cancel</button>
+      <button class="tb-btn tb-primary" onclick="daSaveYear()">Add Year</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add/Edit Doc -->
+<div class="overlay" data-da-modal="1" id="m-da-add-doc">
+  <div class="modal msm">
+    <div class="mhdr">
+      <div class="mhdr-l"><div class="micon micon-blue">📄</div>
+        <div><div class="mtitle" id="m-da-doc-title">Add Document</div><div class="msub">Add to document master list</div></div></div>
+      <button class="mclose" onclick="daCloseM('m-da-add-doc')">✕</button>
+    </div>
+    <div class="mbody">
+      <input type="hidden" id="da-edit-doc-id">
+      <div class="fg"><label class="fl">Category *</label>
+        <select class="fs" id="da-inp-doc-cat">
+          <option>FEES</option><option>Financials</option><option>General</option>
+          <option>GST</option><option>Income Tax</option><option>Legal &amp; Contracts</option>
+          <option>Sales &amp; Operations</option><option>Review</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Document Name *</label><input class="fi" id="da-inp-doc-name" placeholder="e.g. Balance Sheet"></div>
+      <div class="fg"><label class="fl">Responsibility</label><input class="fi" id="da-inp-doc-resp" placeholder="e.g. Client, ATMS, Annual"></div>
+    </div>
+    <div class="mfooter">
+      <button class="tb-btn tb-secondary" onclick="daCloseM('m-da-add-doc')">Cancel</button>
+      <button class="tb-btn tb-primary" onclick="daSaveDoc()">Save Document</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Remarks -->
+<div class="overlay" data-da-modal="1" id="m-da-remarks">
+  <div class="modal msm">
+    <div class="mhdr">
+      <div class="mhdr-l"><div class="micon micon-orange">💬</div>
+        <div><div class="mtitle">Add / Edit Remarks</div><div class="msub" id="da-remarks-subtitle">–</div></div></div>
+      <button class="mclose" onclick="daCloseM('m-da-remarks')">✕</button>
+    </div>
+    <div class="mbody">
+      <input type="hidden" id="da-r-clientId"><input type="hidden" id="da-r-yearId">
+      <input type="hidden" id="da-r-docId"><input type="hidden" id="da-r-status">
+      <div class="fg"><label class="fl">Remarks / Notes</label><textarea class="ft" id="da-inp-remarks" rows="4" placeholder="Enter notes, reference numbers, dates…"></textarea></div>
+    </div>
+    <div class="mfooter">
+      <button class="tb-btn tb-secondary" onclick="daCloseM('m-da-remarks')">Cancel</button>
+      <button class="tb-btn tb-primary" onclick="daSaveRemarks()">Save Remarks</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Confirm Delete -->
+<div class="overlay" data-da-modal="1" id="m-da-confirm">
+  <div class="modal mxs">
+    <div class="mhdr">
+      <div class="mhdr-l"><div class="micon micon-orange">⚠️</div>
+        <div><div class="mtitle">Confirm Delete</div><div class="msub" id="da-confirm-msg">This cannot be undone.</div></div></div>
+      <button class="mclose" onclick="daCloseM('m-da-confirm')">✕</button>
+    </div>
+    <div class="mbody"><div style="font-size:12px;color:var(--ink3)">Are you sure you want to delete this record? All associated progress data will also be removed.</div></div>
+    <div class="mfooter">
+      <button class="tb-btn tb-secondary" onclick="daCloseM('m-da-confirm')">Cancel</button>
+      <button class="tb-btn" style="background:var(--red);color:white" id="da-confirm-action-btn">Delete</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -1630,9 +1947,9 @@ function sampleEmployees(){
 function setView(v){
   curView=v;
   // Nav active
-  ['gst','tasks','emp','allclients'].forEach(id=>{const e=el('nav-'+id);if(e)e.classList.toggle('active',id===v);});
+  ['gst','tasks','emp','allclients','deptaudit'].forEach(id=>{const e=el('nav-'+id);if(e)e.classList.toggle('active',id===v);});
   // Sidebar extras
-  const isGST=v==='gst', isTasks=v==='tasks', isEmp=v==='emp', isAC=v==='allclients';
+  const isGST=v==='gst', isTasks=v==='tasks', isEmp=v==='emp', isAC=v==='allclients', isDA=v==='deptaudit';
   el('months-lbl').style.display=isGST?'':'none';
   el('sbMonths').style.display=isGST?'':'none';
   el('actions-lbl').style.display='';
@@ -1641,9 +1958,9 @@ function setView(v){
   el('sb-add-task').className='sb-item'+(isTasks?'':' hidden');
   el('sb-add-emp').className='sb-item'+(isEmp?'':' hidden');
   // Topbar
-  const titles={gst:'GST <span>Returns</span>',tasks:'Other <span>Tasks</span>',emp:'<span>Employees</span>',allclients:'All <span>Clients</span>'};
+  const titles={gst:'GST <span>Returns</span>',tasks:'Other <span>Tasks</span>',emp:'<span>Employees</span>',allclients:'All <span>Clients</span>',deptaudit:'Dept <span>Audit</span>'};
   el('page-title').innerHTML=titles[v]||'';
-  ['gst-actions','tasks-actions','emp-actions','allclients-actions'].forEach(id=>{const e=el(id);if(e)e.style.display=id===v+'-actions'?'flex':'none';});
+  ['gst-actions','tasks-actions','emp-actions','allclients-actions','deptaudit-actions'].forEach(id=>{const e=el(id);if(e)e.style.display=id===v+'-actions'?'flex':'none';});
   // Panels
   el('dashPanel').style.display=isGST?'':'none';
   el('gst-toolbar').style.display=isGST?'':'none';
@@ -1652,6 +1969,9 @@ function setView(v){
   el('tasks-panel').className='content-panel'+(isTasks?' active':'');
   el('emp-panel').className='content-panel'+(isEmp?' active':'');
   el('allclients-panel').className='content-panel'+(isAC?' active':'');
+  // deptaudit-panel uses fixed positioning like allclients — toggle active class only
+  const daPanel=el('deptaudit-panel');
+  if(daPanel) daPanel.classList.toggle('active',isDA);
   if(isGST){renderDashboard();renderTableHeaders();renderTable();}
   else if(isTasks){renderTasks();}
   else if(isEmp){renderEmp();}
@@ -1664,6 +1984,10 @@ function setView(v){
     // Auto-load if not yet loaded
     const anyIdle = ['kalpesh','aparna','vibhavri'].some(t => allClientsData[t].status==='idle');
     if(anyIdle) refreshAllClients();
+  }
+  else if(isDA){
+    daRenderCurrentView();
+    if(!daInitialized){ daInitialized=true; daLoadData(); }
   }
 }
 function switchMonth(sn){
@@ -2416,7 +2740,9 @@ async function downloadClientMaster(){
 // ── MODAL / TOAST ────────────────────────────────────────
 function openM(id){const e=el(id);if(e)e.classList.add('open');}
 function closeM(id){const e=el(id);if(e)e.classList.remove('open');}
-document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
+  if(e.target===o && !o.getAttribute('data-da-modal')) o.classList.remove('open');
+}));
 let _toastT=null;
 function showToast(msg,type){
   const t=el('toast'),m=el('toast-msg');if(!t)return;
@@ -2762,7 +3088,693 @@ function exportAllClientsCSV() {
 }
 
 
-// ── UNIFIED LOGIN ─────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════
+//  DEPT AUDIT MODULE
+// ══════════════════════════════════════════════════════════════
+
+const DA_GAS_URL = "https://script.google.com/macros/s/AKfycbxWH36X66zgL8m3IhSFn4uQ34DyH6yB-HjZ3LDl3vXfayN8vh5e8Hk7E5bDjuQizt8r/exec";
+
+let daDB = { clients:[], years:[], docs:[], progress:[] };
+let daActiveView = "matrix";
+let daInitialized = false;
+let daActiveSddEl = null;
+let daSddData = {};
+let daSyncInterval = null;
+
+const DA_STATUSES = [
+  { val:"Pending",  cls:"da-s-pending",  dot:"#94a3b8", label:"Pending"     },
+  { val:"Received", cls:"da-s-received", dot:"#d97706", label:"Received"     },
+  { val:"Working",  cls:"da-s-working",  dot:"#7c3aed", label:"Working"      },
+  { val:"Review",   cls:"da-s-review",   dot:"#2563eb", label:"Under Review" },
+  { val:"Approved", cls:"da-s-approved", dot:"#0891b2", label:"Approved"     },
+  { val:"Done",     cls:"da-s-done",     dot:"#059669", label:"Done ✓"       },
+  { val:"N/A",      cls:"da-s-na",       dot:"#d1d5db", label:"N/A"          },
+];
+const DA_VIEWS = ["matrix","detail","grid","docs"];
+
+// ── Init & Sync ──────────────────────────────────────────────
+async function daLoadData() {
+  daSetSyncState("busy","Syncing…");
+  try {
+    const url = DA_GAS_URL + "?action=getAllData&t=" + Date.now();
+    const res  = await fetch(url);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || "Unknown error");
+    daDB = data;
+    daUpdateUI();
+    daSetSyncState("ok","Synced",data.syncedAt);
+    if (!daSyncInterval) daSyncInterval = setInterval(daLoadData, 2*60*1000);
+  } catch(e) {
+    daSetSyncState("err","Sync failed");
+    showToast("Dept Audit sync failed: "+e.message,"err");
+  }
+}
+
+async function daPostGAS(payload) {
+  const res = await fetch(DA_GAS_URL, {method:"POST", body:JSON.stringify(payload)});
+  return res.json();
+}
+
+function daSyncNow() { daLoadData(); }
+
+function daSetSyncState(state, text, isoTime) {
+  const dot  = document.getElementById("da-sync-dot");
+  const stxt = document.getElementById("da-sync-status-text");
+  const ttxt = document.getElementById("da-sync-time-text");
+  if (dot)  dot.className = "sync-dot " + state;
+  if (stxt) stxt.textContent = text;
+  if (ttxt && isoTime) ttxt.textContent = new Date(isoTime).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+}
+
+// ── UI Update ─────────────────────────────────────────────────
+function daUpdateUI() {
+  daUpdateStats();
+  daUpdateFilters();
+  daRenderCurrentView();
+  const nb = document.getElementById("nb-deptaudit");
+  if (nb) { nb.textContent = daDB.clients.length; nb.style.display = daDB.clients.length ? '' : 'none'; }
+}
+
+function daUpdateStats() {
+  const set = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+  set("da-sc-clients", daDB.clients.length);
+  set("da-sc-years",   daDB.years.length);
+  set("da-sc-docs",    daDB.docs.length);
+  const total   = daDB.clients.length * daDB.years.length * daDB.docs.length;
+  const done    = daDB.progress.filter(p=>p.Status==="Done"||p.Status==="Approved"||p.Status==="N/A").length;
+  const pending = Math.max(0, total - daDB.progress.length) + daDB.progress.filter(p=>p.Status==="Pending"||p.Status==="Received"||p.Status==="Working"||p.Status==="Review").length;
+  set("da-sc-done",    done);
+  set("da-sc-pending", pending);
+  set("da-sc-overall", total ? Math.round(done/total*100)+"%" : "0%");
+}
+
+function daUpdateFilters() {
+  const cf = document.getElementById("da-flt-client");
+  const yf = document.getElementById("da-flt-year");
+  if (!cf || !yf) return;
+  const prev = cf.value, yprev = yf.value;
+  cf.innerHTML = '<option value="">All Clients</option>' + daDB.clients.map(c=>`<option value="${c.ID}">${c.Name}</option>`).join("");
+  yf.innerHTML = '<option value="">All Years</option>'   + daDB.years.map(y=>`<option value="${y.YearID}">${y.Label}</option>`).join("");
+  cf.value = prev; yf.value = yprev;
+}
+
+// ── View Switching ────────────────────────────────────────────
+function daSetView(v, topBtn) {
+  daActiveView = v;
+  DA_VIEWS.forEach(id => {
+    const el = document.getElementById("da-view-"+id);
+    if (el) el.classList.toggle("hidden", id!==v);
+  });
+  // top tab active
+  const allVtBtns = ['da-vt-matrix','da-vt-detail','da-vt-grid','da-vt-docs'];
+  allVtBtns.forEach(id=>{const b=document.getElementById(id);if(b)b.classList.remove("active");});
+  const activeBtn = document.getElementById("da-vt-"+v);
+  if (activeBtn) activeBtn.classList.add("active");
+  if (topBtn) {
+    document.querySelectorAll("#deptaudit-actions .vt-btn").forEach(b=>b.classList.remove("active"));
+    topBtn.classList.add("active");
+  }
+  daRenderCurrentView();
+}
+
+function daRenderCurrentView() {
+  if      (daActiveView==="matrix") daRenderMatrix();
+  else if (daActiveView==="detail") daRenderDetail();
+  else if (daActiveView==="grid")   daRenderGrid();
+  else if (daActiveView==="docs")   daRenderDocs();
+}
+
+// ── Filters ───────────────────────────────────────────────────
+function daGetFilters() {
+  return {
+    search: (document.getElementById("da-search-inp")||{}).value?.toLowerCase()||"",
+    client: (document.getElementById("da-flt-client")||{}).value||"",
+    year:   (document.getElementById("da-flt-year")||{}).value||"",
+    cat:    (document.getElementById("da-flt-cat")||{}).value||"",
+    status: (document.getElementById("da-flt-status")||{}).value||"",
+  };
+}
+function daApplyFilters() { daRenderCurrentView(); }
+
+function daFilteredClients() {
+  const f = daGetFilters();
+  return daDB.clients.filter(c => {
+    if (f.client && c.ID!==f.client) return false;
+    if (f.search && !c.Name.toLowerCase().includes(f.search) && !c.GSTIN.toLowerCase().includes(f.search)) return false;
+    return true;
+  });
+}
+function daFilteredDocs() {
+  const f = daGetFilters();
+  return daDB.docs.filter(d => {
+    if (f.cat && d.Category!==f.cat) return false;
+    if (f.search && !d.Document.toLowerCase().includes(f.search) && !d.Category.toLowerCase().includes(f.search)) return false;
+    return true;
+  });
+}
+
+// ── Progress Helpers ─────────────────────────────────────────
+function daGetStatus(clientId, yearId, docId) {
+  const p = daDB.progress.find(r=>r.ClientID===clientId&&r.YearID===yearId&&r.DocID===docId);
+  return p ? p.Status : "Pending";
+}
+function daGetRemarks(clientId, yearId, docId) {
+  const p = daDB.progress.find(r=>r.ClientID===clientId&&r.YearID===yearId&&r.DocID===docId);
+  return p ? (p.Remarks||"") : "";
+}
+function daCalcProgress(clientId, yearId) {
+  const total = daDB.docs.length;
+  if (!total) return 0;
+  // Full credit: Done, Approved, N/A
+  const done = daDB.docs.filter(d=>{
+    const s = daGetStatus(clientId,yearId,d.DocID);
+    return s==="Done"||s==="Approved"||s==="N/A";
+  }).length;
+  // Half credit: Working, Review, Received (shows progress is happening)
+  const partial = daDB.docs.filter(d=>{
+    const s = daGetStatus(clientId,yearId,d.DocID);
+    return s==="Working"||s==="Review"||s==="Received";
+  }).length;
+  return Math.round((done + partial*0.5) / total * 100);
+}
+function daCalcClientProgress(clientId) {
+  if (!daDB.years.length) return 0;
+  return Math.round(daDB.years.reduce((a,y)=>a+daCalcProgress(clientId,y.YearID),0)/daDB.years.length);
+}
+
+// ── Matrix View ───────────────────────────────────────────────
+function daRenderMatrix() {
+  const el = document.getElementById("da-view-matrix");
+  const clients = daFilteredClients();
+  const f = daGetFilters();
+  const years = f.year ? daDB.years.filter(y=>y.YearID===f.year) : daDB.years;
+
+  if (!clients.length || !years.length) {
+    el.innerHTML = '<div class="empty-st">No data found. Add clients and years to get started.</div>';
+    return;
+  }
+
+  let html = `<div class="da-matrix-wrap"><table class="da-matrix-table"><thead><tr>
+    <th>Client / GSTIN</th>
+    ${years.map(y=>`<th style="text-align:center">${y.Label}</th>`).join("")}
+    <th style="text-align:center">Overall</th><th>Actions</th>
+  </tr></thead><tbody>`;
+
+  for (const c of clients) {
+    const overall = daCalcClientProgress(c.ID);
+    html += `<tr><td>
+      <div style="font-weight:600;color:var(--ink)">${c.Name}</div>
+      <div style="font-size:10px;color:var(--ink5);font-family:monospace">${c.GSTIN}</div>
+      <span class="cat-${c.Category}" style="margin-top:4px;display:inline-block">${c.Category}</span>
+    </td>`;
+    for (const y of years) {
+      const pct = daCalcProgress(c.ID,y.YearID);
+      const bc=pct>=100?"#059669":pct>=50?"#2563eb":pct>0?"#d97706":"#cbd5e1";
+      const tc=pct>=100?"#065f46":pct>=50?"#1e3a8a":pct>0?"#92400e":"#dc2626";
+      const bg=pct>=100?"#f0fdf4":pct>=50?"#eff6ff":pct>0?"#fffbeb":"#fff1f2";
+      html += `<td class="da-prog-cell" onclick="daDrillDown('${c.ID}','${y.YearID}')" style="cursor:pointer;background:${bg}">
+        <div class="da-prog-bar-wrap"><div class="da-prog-bar-fill" style="width:${Math.max(pct,4)}%;background:${bc}"></div></div>
+        <div class="da-prog-pct" style="color:${tc}">${pct}%</div>
+      </td>`;
+    }
+    const oc=overall>=100?"#059669":overall>=50?"#2563eb":overall>0?"#d97706":"#cbd5e1";
+    const ot=overall>=100?"#065f46":overall>=50?"#1e3a8a":overall>0?"#92400e":"#dc2626";
+    const ob=overall>=100?"#f0fdf4":overall>=50?"#eff6ff":overall>0?"#fffbeb":"#fff1f2";
+    html += `<td class="da-prog-cell" style="background:${ob}">
+      <div class="da-prog-bar-wrap"><div class="da-prog-bar-fill" style="width:${Math.max(overall,4)}%;background:${oc}"></div></div>
+      <div class="da-prog-pct" style="color:${ot};font-weight:800;font-size:12px">${overall}%</div>
+    </td>
+    <td style="white-space:nowrap">
+      <button class="tb-btn tb-secondary" style="font-size:10px;padding:4px 8px;display:inline-flex;margin-right:4px" onclick="event.stopPropagation();daEditClient('${c.ID}')">✏️ Edit</button>
+      <button class="tb-btn tb-secondary" style="font-size:10px;padding:4px 8px;display:inline-flex;color:var(--red)" onclick="event.stopPropagation();daConfirmDelete('client','${c.ID}','${c.Name}')">🗑️</button>
+    </td></tr>`;
+  }
+  html += "</tbody></table></div>";
+  el.innerHTML = html;
+}
+
+function daDrillDown(clientId, yearId) {
+  daSetView("detail");
+  document.querySelectorAll("#deptaudit-actions .vt-btn").forEach((b,i)=>{b.classList.toggle("active",i===1);});
+  const df=document.getElementById("da-flt-client"); if(df) df.value=clientId;
+  const yf=document.getElementById("da-flt-year");   if(yf) yf.value=yearId;
+  daRenderDetail();
+  setTimeout(()=>{
+    const body=document.getElementById("da-dcc-"+clientId);
+    if(body){ body.classList.add("open"); body.previousElementSibling.querySelector(".da-dcc-chev").classList.add("open"); }
+    const yrTab=document.querySelector(`.da-yr-tab[data-yr="${yearId}"][data-c="${clientId}"]`);
+    if(yrTab) yrTab.click();
+  },100);
+}
+
+// ── Detail View ───────────────────────────────────────────────
+function daRenderDetail() {
+  const el = document.getElementById("da-view-detail");
+  const clients = daFilteredClients();
+  if (!clients.length) { el.innerHTML='<div class="empty-st">No clients found.</div>'; return; }
+  el.innerHTML = clients.map(c=>daRenderClientCard(c)).join("");
+}
+
+function daRenderClientCard(c) {
+  const f = daGetFilters();
+  const years = f.year ? daDB.years.filter(y=>y.YearID===f.year) : daDB.years;
+  const firstYr = years[0];
+  return `<div class="da-detail-card">
+    <div class="da-dcc-header" onclick="daToggleCard('${c.ID}')">
+      <div><div class="da-dcc-name">${c.Name}</div><div class="da-dcc-gstin">${c.GSTIN}</div></div>
+      <span class="cat-${c.Category}" style="margin-left:10px">${c.Category}</span>
+      <div style="margin-left:12px;display:flex;gap:8px">
+        ${years.map(y=>{const p=daCalcProgress(c.ID,y.YearID);const pc=p>=100?"#6ee7b7":p>=50?"#93c5fd":p>0?"#fcd34d":"#fca5a5";return`<div style="text-align:center;background:rgba(255,255,255,.1);border-radius:7px;padding:4px 8px;min-width:48px"><div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.75)">${y.Label}</div><div style="font-size:13px;font-weight:800;color:${pc};margin-top:1px">${p}%</div></div>`;}).join("")}
+      </div>
+      <div style="margin-left:10px;display:flex;gap:6px">
+        <button class="tb-btn tb-secondary" style="font-size:10px;padding:4px 8px" onclick="event.stopPropagation();daEditClient('${c.ID}')">✏️</button>
+        <button class="tb-btn tb-secondary" style="font-size:10px;padding:4px 8px;color:var(--red)" onclick="event.stopPropagation();daConfirmDelete('client','${c.ID}','${c.Name}')">🗑️</button>
+      </div>
+      <div class="da-dcc-chev" style="color:rgba(255,255,255,.6)">›</div>
+    </div>
+    <div class="da-dcc-body" id="da-dcc-${c.ID}">
+      <div class="da-yr-tabs">
+        ${years.map((y,i)=>`<button class="da-yr-tab${i===0?" active":""}" data-yr="${y.YearID}" data-c="${c.ID}" onclick="daSwitchYear(this,'${c.ID}','${y.YearID}')">${y.Label} · ${daCalcProgress(c.ID,y.YearID)}%</button>`).join("")}
+      </div>
+      <div id="da-doc-body-${c.ID}">
+        ${firstYr ? daRenderDocBody(c.ID,firstYr.YearID) : '<div class="empty-st">No years configured.</div>'}
+      </div>
+    </div>
+  </div>`;
+}
+
+function daToggleCard(id) {
+  const body=document.getElementById("da-dcc-"+id);
+  const chev=body.previousElementSibling.querySelector(".da-dcc-chev");
+  const open=body.classList.toggle("open");
+  chev.classList.toggle("open",open);
+}
+
+function daSwitchYear(tabEl, clientId, yearId) {
+  document.querySelectorAll(`.da-yr-tab[data-c="${clientId}"]`).forEach(t=>t.classList.remove("active"));
+  tabEl.classList.add("active");
+  document.getElementById("da-doc-body-"+clientId).innerHTML = daRenderDocBody(clientId, yearId);
+}
+
+function daRenderDocBody(clientId, yearId) {
+  const docs = daFilteredDocs();
+  const cats = [...new Set(docs.map(d=>d.Category))];
+  return cats.map(cat => {
+    const catDocs = docs.filter(d=>d.Category===cat);
+    const catDone = catDocs.filter(d=>{ const s=daGetStatus(clientId,yearId,d.DocID); return s==="Done"||s==="Approved"||s==="N/A"; }).length;
+    return `<div class="da-cat-group">
+      <div class="da-cat-hdr" onclick="daToggleCatGroup(this)">
+        <span>${cat}</span>
+        <span class="da-cat-prog-mini">${catDone}/${catDocs.length}</span>
+      </div>
+      <div class="da-doc-rows">${catDocs.map(d=>daRenderDocRow(clientId,yearId,d)).join("")}</div>
+    </div>`;
+  }).join("");
+}
+
+function daRenderDocRow(clientId, yearId, doc) {
+  const status  = daGetStatus(clientId,yearId,doc.DocID);
+  const remarks = daGetRemarks(clientId,yearId,doc.DocID);
+  const st = DA_STATUSES.find(s=>s.val===status)||DA_STATUSES[0];
+  return `<div class="da-doc-row">
+    <div class="da-doc-resp" title="Responsibility">${doc.Responsibility||""}</div>
+    <div class="da-doc-name">${doc.Document}</div>
+    <div class="da-sdd-wrap">
+      <div class="da-sdd-pill ${st.cls}" onclick="daOpenSdd(event,this,'${clientId}','${yearId}','${doc.DocID}')">
+        <span class="da-sdd-text">${st.label}</span>
+        <span class="da-sdd-arr">▾</span>
+      </div>
+    </div>
+    <button class="da-remarks-btn" title="${remarks||'Add remarks'}" onclick="daOpenRemarks('${clientId}','${yearId}','${doc.DocID}','${status}','${doc.Document.replace(/'/g,"\\'")}','${(remarks||"").replace(/'/g,"\\'")}')">
+      ${remarks?"💬":"📝"}
+    </button>
+  </div>`;
+}
+
+function daToggleCatGroup(hdr) {
+  const rows=hdr.nextElementSibling;
+  rows.style.display=rows.style.display==="none"?"":"none";
+}
+
+// ── In-place update helpers ───────────────────────────────────
+
+// Update the year-tab button label (e.g. "19-20 · 45%") without re-render
+function daUpdateYearTabLabel(clientId, yearId) {
+  const tab = document.querySelector(`.da-yr-tab[data-c="${clientId}"][data-yr="${yearId}"]`);
+  if (!tab) return;
+  const y = daDB.years.find(yr=>yr.YearID===yearId);
+  if (!y) return;
+  const pct = daCalcProgress(clientId, yearId);
+  const wasActive = tab.classList.contains('active');
+  tab.textContent = `${y.Label} · ${pct}%`;
+  if (wasActive) tab.classList.add('active');
+}
+
+// Update the year badges shown in the card header row
+function daUpdateCardHeaderBadge(clientId) {
+  // Header toggle uses daToggleCard('clientId') — find by ID of the body sibling
+  const body = document.getElementById("da-dcc-"+clientId);
+  if (!body) return;
+  const header = body.previousElementSibling;
+  if (!header) return;
+  // Badge wrap: the div right before the edit/delete buttons div
+  // It's the div[style*="gap:8px"] that contains the per-year mini cards
+  const allGapDivs = header.querySelectorAll('div[style*="gap:8px"]');
+  // First one has the year badges (second is the edit/delete button row)
+  const badgeWrap = allGapDivs[0];
+  if (!badgeWrap) return;
+  const f = daGetFilters();
+  const years = f.year ? daDB.years.filter(y=>y.YearID===f.year) : daDB.years;
+  badgeWrap.innerHTML = years.map(y=>{
+    const p = daCalcProgress(clientId, y.YearID);
+    const pc = p>=100?"#6ee7b7":p>=50?"#93c5fd":p>0?"#fcd34d":"#fca5a5";
+    return `<div style="text-align:center;background:rgba(255,255,255,.1);border-radius:7px;padding:4px 8px;min-width:48px">
+      <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.75)">${y.Label}</div>
+      <div style="font-size:13px;font-weight:800;color:${pc};margin-top:1px">${p}%</div>
+    </div>`;
+  }).join("");
+}
+
+// Update cat group progress counter (e.g. "3/5") in-place
+function daUpdateCatGroupCounter(clientId, yearId, cat) {
+  const catDocs = daDB.docs.filter(d=>d.Category===cat);
+  // Counter shows fully-done items only (Done / Approved / N/A)
+  const done = catDocs.filter(d=>{
+    const s = daGetStatus(clientId,yearId,d.DocID);
+    return s==="Done"||s==="Approved"||s==="N/A";
+  }).length;
+  const docBody = document.getElementById("da-doc-body-"+clientId);
+  if (!docBody) return;
+  docBody.querySelectorAll('.da-cat-hdr').forEach(hdr=>{
+    const spans = hdr.querySelectorAll('span');
+    if (spans[0]?.textContent===cat) {
+      const mini = hdr.querySelector('.da-cat-prog-mini');
+      if (mini) mini.textContent=`${done}/${catDocs.length}`;
+    }
+  });
+}
+
+// Update the stat card numbers (Done %, Pending, Overall %) after any status change
+// Already handled by daUpdateStats() — just ensure it's always called
+
+// ── Grid View ─────────────────────────────────────────────────
+function daRenderGrid() {
+  const el=document.getElementById("da-view-grid");
+  const clients=daFilteredClients();
+  if (!clients.length) { el.innerHTML='<div class="empty-st">No clients found.</div>'; return; }
+  el.innerHTML=`<div class="da-client-grid">${clients.map(c=>{
+    const overall=daCalcClientProgress(c.ID);
+    const oc=overall>=100?"var(--green)":overall>=50?"var(--accent)":overall>0?"var(--orange)":"var(--border2)";
+    return `<div class="da-cg-card">
+      <div class="da-cg-top">
+        <div style="display:flex;align-items:start;justify-content:space-between">
+          <div><div class="da-cg-name">${c.Name}</div><div class="da-cg-gstin">${c.GSTIN}</div></div>
+          <span class="cat-${c.Category}">${c.Category}</span>
+        </div>
+        <div style="margin-top:8px">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink4);margin-bottom:3px">
+            <span>Overall Progress</span><span style="font-weight:700;color:var(--ink)">${overall}%</span>
+          </div>
+          <div style="background:var(--bg2);border-radius:20px;height:6px"><div style="width:${overall}%;background:${oc};height:6px;border-radius:20px;transition:width .4s"></div></div>
+        </div>
+      </div>
+      <div class="da-cg-years">${daDB.years.map(y=>{
+        const pct=daCalcProgress(c.ID,y.YearID);
+        const yc=pct>=100?"var(--green)":pct>=50?"var(--accent)":pct>0?"var(--orange)":"var(--border2)";
+        return `<div class="da-cg-yr" onclick="daDrillDown('${c.ID}','${y.YearID}')">
+          <div>${y.Label}</div>
+          <div class="da-cg-yr-bar" style="width:${pct}%;background:${yc}"></div>
+          <div class="da-cg-yr-pct">${pct}%</div>
+        </div>`;
+      }).join("")}</div>
+      <div class="da-cg-actions">
+        <div class="da-cg-btn" onclick="daDrillDown('${c.ID}','${daDB.years[0]?.YearID}')">View Detail</div>
+        <div class="da-cg-btn" onclick="daEditClient('${c.ID}')">Edit</div>
+        <div class="da-cg-btn del" onclick="daConfirmDelete('client','${c.ID}','${c.Name}')">Delete</div>
+      </div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+// ── Docs View ─────────────────────────────────────────────────
+function daRenderDocs() {
+  const el=document.getElementById("da-view-docs");
+  const docs=daFilteredDocs();
+  if (!docs.length) { el.innerHTML='<div class="empty-st">No documents found.</div>'; return; }
+  el.innerHTML=`<div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+    <button class="tb-btn tb-primary" onclick="daOpenM('m-da-add-doc')">+ Add Document</button>
+  </div>
+  <div class="da-docs-table-wrap"><table class="da-docs-table">
+    <thead><tr><th>#</th><th>Category</th><th>Document Name</th><th>Responsibility</th><th>Actions</th></tr></thead>
+    <tbody>${docs.map((d,i)=>`<tr>
+      <td style="color:var(--ink5);font-size:10px">${i+1}</td>
+      <td><span style="font-size:10px;font-weight:600;color:var(--accent)">${d.Category}</span></td>
+      <td style="font-weight:500">${d.Document}</td>
+      <td><span style="font-size:10px;color:var(--ink4)">${d.Responsibility||"–"}</span></td>
+      <td style="white-space:nowrap">
+        <button class="tb-btn tb-secondary" style="font-size:10px;padding:4px 8px;display:inline-flex;margin-right:4px" onclick="event.stopPropagation();daEditDoc('${d.DocID}')">✏️ Edit</button>
+        <button class="tb-btn tb-secondary" style="font-size:10px;padding:4px 8px;display:inline-flex;color:var(--red)" onclick="event.stopPropagation();daConfirmDelete('doc','${d.DocID}','${d.Document}')">🗑️</button>
+      </td>
+    </tr>`).join("")}
+    </tbody>
+  </table></div>`;
+}
+
+// ── SDD ───────────────────────────────────────────────────────
+function daOpenSdd(e, pillEl, clientId, yearId, docId) {
+  e.stopPropagation();
+  if (daActiveSddEl) daCloseSdd();
+  daSddData={clientId,yearId,docId,pillEl};  // store pillEl for in-place update
+  const status=daGetStatus(clientId,yearId,docId);
+  const rect=pillEl.getBoundingClientRect();
+  const list=document.createElement("div");
+  list.className="da-sdd-list"; list.id="da-sdd-active";
+  list.style.top=(rect.bottom+4)+"px"; list.style.left=rect.left+"px";
+  list.innerHTML=DA_STATUSES.map(s=>`
+    <div class="da-sdd-opt${s.val===status?" scur":""}" onclick="daPickStatus('${s.val}')">
+      <div class="da-sdd-dot" style="background:${s.dot}"></div>${s.label}
+    </div>`).join("");
+  document.body.appendChild(list);
+  daActiveSddEl=list;
+}
+function daCloseSdd(e) {
+  if (daActiveSddEl&&(!e||!daActiveSddEl.contains(e.target))) {
+    daActiveSddEl.remove(); daActiveSddEl=null;
+  }
+}
+async function daPickStatus(status) {
+  daCloseSdd();
+  const {clientId,yearId,docId,pillEl}=daSddData;
+  const existing=daDB.progress.find(p=>p.ClientID===clientId&&p.YearID===yearId&&p.DocID===docId);
+  if (existing) existing.Status=status;
+  else daDB.progress.push({ClientID:clientId,YearID:yearId,DocID:docId,Status:status,Remarks:""});
+
+  // ── In-place pill update (no full re-render) ──
+  if (pillEl) {
+    const st=DA_STATUSES.find(s=>s.val===status)||DA_STATUSES[0];
+    pillEl.className='da-sdd-pill '+st.cls;
+    const txt=pillEl.querySelector('.da-sdd-text');
+    if(txt) txt.textContent=st.label;
+  }
+
+  // Update year-tab progress label if in detail view
+  daUpdateYearTabLabel(clientId,yearId);
+  daUpdateStats();
+
+  // Update card header year badges if open
+  daUpdateCardHeaderBadge(clientId);
+
+  // Update cat group counter
+  const doc = daDB.docs.find(d=>d.DocID===docId);
+  if (doc) daUpdateCatGroupCounter(clientId, yearId, doc.Category);
+
+  try {
+    const r=await daPostGAS({action:"updateProgress",clientId,yearId,docId,status});
+    if (!r.ok) showToast("Save failed: "+r.error,"err");
+    else showToast("Status updated ✓","tok");
+  } catch(e){ showToast("Network error","err"); }
+}
+
+// ── Remarks ───────────────────────────────────────────────────
+function daOpenRemarks(clientId,yearId,docId,status,docName,remarks) {
+  document.getElementById("da-r-clientId").value=clientId;
+  document.getElementById("da-r-yearId").value=yearId;
+  document.getElementById("da-r-docId").value=docId;
+  document.getElementById("da-r-status").value=status;
+  document.getElementById("da-remarks-subtitle").textContent=docName;
+  document.getElementById("da-inp-remarks").value=remarks||"";
+  daOpenM("m-da-remarks");
+}
+async function daSaveRemarks() {
+  const clientId=document.getElementById("da-r-clientId").value;
+  const yearId=document.getElementById("da-r-yearId").value;
+  const docId=document.getElementById("da-r-docId").value;
+  const status=document.getElementById("da-r-status").value;
+  const remarks=document.getElementById("da-inp-remarks").value;
+  const existing=daDB.progress.find(p=>p.ClientID===clientId&&p.YearID===yearId&&p.DocID===docId);
+  if (existing) existing.Remarks=remarks;
+  else daDB.progress.push({ClientID:clientId,YearID:yearId,DocID:docId,Status:status,Remarks:remarks});
+  daCloseM("m-da-remarks");
+
+  // ── In-place remarks button update (no full re-render) ──
+  // Find the remarks button by scanning doc-rows for matching onclick
+  const allRmBtns = document.querySelectorAll('#da-view-detail .da-remarks-btn');
+  allRmBtns.forEach(btn => {
+    const oc = btn.getAttribute('onclick')||'';
+    if (oc.includes(`'${clientId}'`) && oc.includes(`'${yearId}'`) && oc.includes(`'${docId}'`)) {
+      btn.textContent = remarks ? '💬' : '📝';
+      btn.title = remarks || 'Add remarks';
+      // Update the onclick to carry the new remarks value
+      const doc = daDB.docs.find(d=>d.DocID===docId);
+      if (doc) {
+        const safeDoc  = doc.Document.replace(/'/g,"\\'");
+        const safeRem  = remarks.replace(/'/g,"\\'");
+        btn.setAttribute('onclick',`daOpenRemarks('${clientId}','${yearId}','${docId}','${status}','${safeDoc}','${safeRem}')`);
+      }
+    }
+  });
+
+  try { await daPostGAS({action:"updateProgress",clientId,yearId,docId,status,remarks}); showToast("Remarks saved ✓","tok"); }
+  catch(e){ showToast("Network error","err"); }
+}
+
+// ── Client CRUD ───────────────────────────────────────────────
+function daEditClient(id) {
+  const c=daDB.clients.find(x=>x.ID===id); if(!c) return;
+  document.getElementById("m-da-client-title").textContent="Edit Client";
+  document.getElementById("da-edit-client-id").value=id;
+  document.getElementById("da-inp-client-name").value=c.Name;
+  document.getElementById("da-inp-client-gstin").value=c.GSTIN;
+  document.getElementById("da-inp-client-cat").value=c.Category;
+  daOpenM("m-da-add-client");
+}
+async function daSaveClient() {
+  const id    =document.getElementById("da-edit-client-id").value;
+  const name  =document.getElementById("da-inp-client-name").value.trim();
+  const gstin =document.getElementById("da-inp-client-gstin").value.trim().toUpperCase();
+  const cat   =document.getElementById("da-inp-client-cat").value;
+  if (!name||!gstin) { showToast("Name and GSTIN required","err"); return; }
+  daCloseM("m-da-add-client");
+  if (id) {
+    const c=daDB.clients.find(x=>x.ID===id); if(c){c.Name=name;c.GSTIN=gstin;c.Category=cat;}
+    try { await daPostGAS({action:"editClient",id,name,gstin,category:cat}); showToast("Client updated ✓","tok"); }
+    catch(e){ showToast("Error: "+e.message,"err"); }
+  } else {
+    const tmpId="C"+Date.now();
+    daDB.clients.push({ID:tmpId,Name:name,GSTIN:gstin,Category:cat});
+    try {
+      const r=await daPostGAS({action:"addClient",name,gstin,category:cat});
+      if(r.ok){const c=daDB.clients.find(x=>x.ID===tmpId);if(c)c.ID=r.id;}
+      showToast("Client added ✓","tok");
+    } catch(e){ showToast("Error: "+e.message,"err"); }
+  }
+  document.getElementById("da-edit-client-id").value="";
+  document.getElementById("m-da-client-title").textContent="Add New Client";
+  daUpdateUI();
+}
+
+// ── Year CRUD ─────────────────────────────────────────────────
+async function daSaveYear() {
+  const label=document.getElementById("da-inp-year-label").value.trim();
+  if (!label) { showToast("Year label required","err"); return; }
+  daCloseM("m-da-add-year");
+  const tmpId="YR"+Date.now();
+  daDB.years.push({YearID:tmpId,Label:label});
+  try {
+    const r=await daPostGAS({action:"addYear",label});
+    if(r.ok){const y=daDB.years.find(x=>x.YearID===tmpId);if(y)y.YearID=r.id;}
+    showToast("Year added ✓","tok");
+  } catch(e){ showToast("Error: "+e.message,"err"); }
+  document.getElementById("da-inp-year-label").value="";
+  daUpdateUI();
+}
+
+// ── Doc CRUD ──────────────────────────────────────────────────
+function daEditDoc(id) {
+  const d=daDB.docs.find(x=>x.DocID===id); if(!d) return;
+  document.getElementById("m-da-doc-title").textContent="Edit Document";
+  document.getElementById("da-edit-doc-id").value=id;
+  document.getElementById("da-inp-doc-cat").value=d.Category;
+  document.getElementById("da-inp-doc-name").value=d.Document;
+  document.getElementById("da-inp-doc-resp").value=d.Responsibility||"";
+  daOpenM("m-da-add-doc");
+}
+async function daSaveDoc() {
+  const id      =document.getElementById("da-edit-doc-id").value;
+  const category=document.getElementById("da-inp-doc-cat").value;
+  const docName =document.getElementById("da-inp-doc-name").value.trim();
+  const resp    =document.getElementById("da-inp-doc-resp").value.trim();
+  if (!docName) { showToast("Document name required","err"); return; }
+  daCloseM("m-da-add-doc");
+  if (id) {
+    const d=daDB.docs.find(x=>x.DocID===id); if(d){d.Category=category;d.Document=docName;d.Responsibility=resp;}
+    try { await daPostGAS({action:"editDoc",id,category,document:docName,responsibility:resp}); showToast("Document updated ✓","tok"); }
+    catch(e){ showToast("Error","err"); }
+  } else {
+    const tmpId="D"+Date.now();
+    daDB.docs.push({DocID:tmpId,Category:category,Document:docName,Responsibility:resp});
+    try {
+      const r=await daPostGAS({action:"addDoc",category,document:docName,responsibility:resp});
+      if(r.ok){const d=daDB.docs.find(x=>x.DocID===tmpId);if(d)d.DocID=r.id;}
+      showToast("Document added ✓","tok");
+    } catch(e){ showToast("Error","err"); }
+  }
+  document.getElementById("da-edit-doc-id").value="";
+  document.getElementById("m-da-doc-title").textContent="Add Document";
+  daUpdateUI();
+}
+
+// ── Delete ────────────────────────────────────────────────────
+function daConfirmDelete(type,id,name) {
+  document.getElementById("da-confirm-msg").textContent=`Delete "${name}"? All progress data will be lost.`;
+  const btn=document.getElementById("da-confirm-action-btn");
+  btn.onclick=()=>daDoDelete(type,id);
+  daOpenM("m-da-confirm");
+}
+async function daDoDelete(type,id) {
+  daCloseM("m-da-confirm");
+  if (type==="client") {
+    daDB.clients=daDB.clients.filter(c=>c.ID!==id);
+    daDB.progress=daDB.progress.filter(p=>p.ClientID!==id);
+    try { await daPostGAS({action:"deleteClient",id}); showToast("Client deleted","tok"); } catch(e){ showToast("Error","err"); }
+  } else if (type==="doc") {
+    daDB.docs=daDB.docs.filter(d=>d.DocID!==id);
+    daDB.progress=daDB.progress.filter(p=>p.DocID!==id);
+    try { await daPostGAS({action:"deleteDoc",id}); showToast("Document deleted","tok"); } catch(e){ showToast("Error","err"); }
+  }
+  daUpdateUI();
+}
+
+// ── Modal Helpers ─────────────────────────────────────────────
+function daOpenM(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.add("open");
+}
+function daCloseM(id){
+  const el = document.getElementById(id);
+  if (el) el.classList.remove("open");
+}
+
+// Mark all DA overlays so the global overlay-click listener skips them
+// Then add our own scoped listeners
+['m-da-add-client','m-da-add-year','m-da-add-doc','m-da-remarks','m-da-confirm'].forEach(id => {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.setAttribute('data-da-modal','1');
+  // Click outside (on overlay backdrop) → close
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) daCloseM(id);
+  });
+  // Clicks inside the modal card must NOT bubble to backdrop
+  const modal = overlay.querySelector('.modal');
+  if (modal) modal.addEventListener('click', e => e.stopPropagation());
+});
+
+document.addEventListener("click", daCloseSdd);
+
+// End Dept Audit Module
+
 
 function loginTab(mode) {
   loginMode = mode;
